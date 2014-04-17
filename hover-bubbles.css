@@ -1,0 +1,356 @@
+/*
+ * RULES FOR A HOVER BUBBLE SYSTEM
+ * 
+ * EXPLANATION OF THE BASIC CLASSES:
+ * |
+ * |---	BUBBLE--BOTTOM:	CREATES BUBBLE BELOW PARENT ELEMENT
+ * |---	BUBBLE--TOP:	CREATES BUBBLE ABOVE PARENT ELEMENT
+ * |---	BUBBLE--LEFT:	CREATES BUBBLE LEFT OF THE PARENT ELEMENT
+ * |---	BUBBLE--RIGHT:	CREATES BUBBLE RIGHT OF THE PARENT ELEMENT
+ * 
+ * YOU CAN USE ANY SENSIBLE COMBINATION OF TWO FROM THE ABOVE
+ * TO CREATE BUBBLES IN CORNERS, TO KEEP THEM FROM CLIPPING/OVERFLOWING.
+ * 
+ * E.G. 
+ * .bubble--left.bubble--top WILL CREATE A BUBBLE BEST SUITED FOR THE BOTTOM LEFT CORNER
+ * 
+ * EXPLANATION OF THE VARIATION CLASSES:
+ * |
+ * |---	BUBBLE--WARNING:	COLORS THE BUBBLE ORANGE
+ * |---	BUBBLE--ERROR:		COLORS THE BUBBLE RED
+ * |---	BUBBLE--IMPORTANT:	MAKES THE BUBBLE ALWAYS VISIBLE, NOT ONLY ON HOVER
+ * 
+ * IF NO VARIATION CLASS IS USED, THE STYLE WILL DEFAULT TO WHITE AND THE BUBBLE WILL ONLY APPEAR ON HOVER
+ * 
+ * NOTES:
+ * |
+ * |---	THE PARENT ELEMENT OF THE BUBBLE MUST HAVE:
+ * |	|--	A 'DATA-BUBBLE' ATTRIBUTE WITH THE CONTENT OF THE BUBBLE
+ * |	|--	RELATIVE OR ABSOLUTE POSITION, IN ORDER FOR THE BUBBLES TO DISPLAY CORRECTLY
+ * |
+ * |---	ELEMENTS WITH JUST A DATA-BUBBLE ATTRIBUTE BUT NO BUBBLE--* BASIC CLASS
+ * |	WILL STILL DISPLAY THE DATA-BUBBLE CONTENT BUT THEY WILL NOT LOOK LIKE BUBBLES
+ * |
+ * |---	DO NOT CHANGE THE ORDER OF THE RULES. 
+ * |	RIGHT AND LEFT MUST ALWAYS BE DECLARED BEFORE TOP AND BOTTOM OR THE COMBINATIONS WILL NOT WORK PROPERLY
+ * |
+ * |---	THE BUBBLES ARE DESIGNED TO BE 30PX IN HEIGHT (ONE LINE) AT ALL TIMES.
+ * 		ATTEMPTING TO GIVE THEM A HEIGHT > 30PX WILL MOST LIKELY BREAK THE DESIGN, UNLESS NEGATIVE MARGINS ARE RECALCULATED
+ * 		KEEP THE MESSAGES SHORT AND CLEAR.
+ */
+
+
+/*
+ * BASIC RULES
+ */
+
+[data-bubble]::before, [class*=bubble]::after {
+	/*display:none;*/
+	visibility:hidden;
+	position:absolute;
+	opacity:0.7;
+	pointer-events: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	text-shadow:none;
+}
+
+[data-bubble]::before {
+	content: attr(data-bubble);
+	color: rgb(56,56,56);
+	/*max-width:250px;*/
+	border: 1px solid rgb(175, 175, 175);
+	padding:0px 10px;
+	height: 30px;
+	line-height: 27px;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: center;
+	white-space: nowrap;
+	background-color: rgba(255, 255, 255, 1);
+	z-index:6;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+[class*=bubble]::before {
+	min-width:100%;
+	-webkit-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-moz-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-ms-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-o-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+}
+
+[class*=bubble]::after {
+	-webkit-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-moz-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-ms-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	-o-transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	transition: opacity .2s ease, bottom .2s ease, top .2s ease, left .2s ease, right .2s ease;
+	border: 1px solid transparent;
+	border-left: 1px solid rgb(175, 175, 175);
+	border-bottom: 1px solid rgb(175, 175, 175);
+	/*box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.2);*/
+	background-color: white;
+	content: "";
+	height: 14px;
+	width: 14px;
+	z-index:7;
+}
+
+[class*=bubble]:active::after,
+[class*=bubble]:active::before {
+	display:none;
+}
+
+[data-bubble]:hover::before,[class*=bubble]:hover::after, .bubble--important::before, .bubble--important::after {
+	/*display:inline-block;*/
+	visibility:visible;
+	opacity:1;
+}
+
+/*
+ * WARNING BUBBLE
+ */
+
+.bubble--warning::before {
+	background-color: rgba(250, 212, 62, 1);
+	border: 1px solid rgba(213, 145, 59, 1);
+}
+
+.bubble--warning::after {
+	border-left: 1px solid rgba(213, 145, 59, 1);
+	border-bottom: 1px solid rgba(213, 145, 59, 1);	
+	background-color: rgba(250, 212, 62, 1);
+}
+
+/*
+ * ERROR BUBBLE
+ */
+.bubble--error::before {
+	background-color: rgba(219, 60, 60, 1);
+	border: 1px solid rgba(184, 0, 0, 1);
+	color:whitesmoke;
+	text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
+}
+
+.bubble--error::after {
+	border-left: 1px solid rgba(184, 0, 0, 1);
+	border-bottom: 1px solid rgba(184, 0, 0, 1);	
+	background-color: rgba(219, 60, 60, 1);
+}
+
+/*
+ * LEFT BUBBLE
+ */
+
+.bubble--left::before,
+.bubble--left::after {
+	right: 100%;
+	top: 50%;
+}
+
+.bubble--left:hover::before,
+.bubble--left:hover::after,
+.bubble--left.bubble--important::before,
+.bubble--left.bubble--important::after  {
+	right: 113%;
+}
+
+.bubble--left::before {
+	margin-top: -15px;
+	box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);
+}
+
+.bubble--left::after {
+	-webkit-transform: rotate(-135deg);
+	-moz-transform: rotate(-135deg);
+	-ms-transform: rotate(-135deg);
+	-o-transform: rotate(-135deg);
+	transform: rotate(-135deg);
+	margin-top: -7px;
+	margin-right: -6px;
+}
+
+/*
+ * RIGHT BUBBLE
+ */
+
+.bubble--right::before,
+.bubble--right::after {
+	left: 100%;
+	top: 50%;
+}
+
+.bubble--right:hover::before,
+.bubble--right:hover::after,
+.bubble--right.bubble--important::before,
+.bubble--right.bubble--important::after {
+	left: 113%;
+}
+
+.bubble--right::before {
+	margin-top: -15px;
+	box-shadow: -1px 1px 2px 0px rgba(0,0,0,0.2);
+}
+
+.bubble--right::after {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+	margin-left: -6px;
+	margin-top: -7px;
+}
+
+/* 
+ * TOP BUBBLE 
+ */
+
+.bubble--top::before, 
+.bubble--top.bubble--right::before,
+.bubble--top.bubble--left::before {
+	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2);
+	top: -15px;
+	left:0; /*for center positioning, since the min-width is 100% of parent element*/
+}
+
+.bubble--top::after, 
+.bubble--top.bubble--right::after, 
+.bubble--top.bubble--left::after {
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	top: 0px;
+	left: 50%;
+	margin-left: -7px;
+}
+
+.bubble--top:hover::before, 
+.bubble--top.bubble--right:hover::before, 
+.bubble--top.bubble--left:hover::before,
+.bubble--top.bubble--important::before, 
+.bubble--top.bubble--right.bubble--important::before, 
+.bubble--top.bubble--left.bubble--important::before {
+	top: -40px;
+}
+
+.bubble--top:hover::after, 
+.bubble--top.bubble--right:hover::after, 
+.bubble--top.bubble--left:hover::after,
+.bubble--top.bubble--important::after, 
+.bubble--top.bubble--right.bubble--important::after, 
+.bubble--top.bubble--left.bubble--important::after {
+	top: -18px
+}
+
+/* 
+ * BOTTOM BUBBLE 
+ */
+
+.bubble--bottom::before, 
+.bubble--bottom.bubble--left::before, 
+.bubble--bottom.bubble--right::before {
+	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2);
+	bottom: -15px;
+	left:0; /*for center positioning long bubbles, since the min-width is 100% of parent element*/
+}
+
+.bubble--bottom::after, 
+.bubble--bottom.bubble--left::after, 
+.bubble--bottom.bubble--right::after {
+	-webkit-transform: rotate(135deg);
+	-moz-transform: rotate(135deg);
+	-ms-transform: rotate(135deg);
+	-o-transform: rotate(135deg);
+	transform: rotate(135deg);
+	bottom: 0px;
+	left: 50%;
+	margin-left: -7px;
+}
+
+.bubble--bottom:hover::before, 
+.bubble--bottom.bubble--left:hover::before, 
+.bubble--bottom.bubble--right:hover::before,
+.bubble--bottom.bubble--important::before, 
+.bubble--bottom.bubble--right.bubble--important::before, 
+.bubble--bottom.bubble--left.bubble--important::before {
+	bottom: -40px;
+}
+
+.bubble--bottom:hover::after, 
+.bubble--bottom.bubble--left:hover::after, 
+.bubble--bottom.bubble--right:hover::after,
+.bubble--bottom.bubble--important::after, 
+.bubble--bottom.bubble--right.bubble--important::after, 
+.bubble--bottom.bubble--left.bubble--important::after {
+	bottom: -18px;
+}
+
+/*
+ * TOP LEFT CORNER BUBBLE
+ */
+
+.bubble--bottom.bubble--left::before {
+	left: 0;
+	right:auto;
+	top: auto;
+}
+
+.bubble--bottom.bubble--left::after {
+	top: auto;
+}
+
+/*
+ * TOP RIGHT CORNER BUBBLE
+ */
+
+.bubble--bottom.bubble--right::before {
+	right: 0;
+	left:auto;
+	top: auto;
+}
+
+.bubble--bottom.bubble--right::after {
+	top: auto;
+}
+
+/*
+ * BOTTOM RIGHT CORNER BUBBLE
+ */
+
+.bubble--top.bubble--right::before {
+	right: 0;
+	left:auto;
+	margin-top: 0;
+}
+
+.bubble--top.bubble--right::after {
+	margin-top: 0;
+}
+
+/*
+ * BOTTOM LEFT CORNER BUBBLE
+ */
+
+.bubble--top.bubble--left::before {
+	left: 0;
+	right:auto;
+	top: auto;
+	margin-top: 0;
+}
+
+.bubble--top.bubble--left::after {
+	top: auto;
+	margin-top: 0;
+}
